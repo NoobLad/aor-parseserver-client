@@ -171,13 +171,12 @@ function formatObject(data) {
             __type: 'Date',
             iso: data
         };
-    } else if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && !Array.isArray(data)) {
+    } else if (typeof data === 'object' && !Array.isArray(data)) {
         return Object.keys(data).reduce(function (acc, key) {
             return _extends({}, acc, _defineProperty({}, key, formatObject(data[key])));
         }, {});
     }
     return data;
-
 }
 
 function isDate(data) {
