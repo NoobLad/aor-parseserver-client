@@ -133,23 +133,23 @@ export default (parseConfig, httpClient = fetchJson) => {
         switch (type) {
             case GET_LIST:
             case GET_MANY_REFERENCE:
-                return {
+                return parseObject({
                     data : json.results.map(x => ({...x, id: x.objectId})),
                     total: json.count,
-                }
+                })
             case CREATE:
             case GET_ONE:
             case UPDATE:
             case DELETE:
-                return {
+                return parseObject({
                     data: {...json, id: json.objectId},
-                }
+                })
             case GET_MANY:
-                return {
+                return parseObject({
                     data: json.results.map(x => ({...x, id: x.objectId})),
-                }
+                })
             default:
-                return json
+                return parseObject(json)
         }
     }
 
@@ -192,4 +192,18 @@ function isDate(data) {
 
 function stringify(data) {
     return JSON.stringify(formatObject(data));
+}
+
+function parseObject(obj) {
+    if (obj && obj.__type === "Date") {
+        return obj.iso
+    } else if (typeof data === 'object' && !Array.isArray(data)) {
+        return Object.keys(obj).reduce((acc, key) => {
+            return {
+                ...acc,
+                [key]: parseObject(obj[key]),
+            }
+        }, {})
+    }
+    return obj
 }
