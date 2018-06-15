@@ -165,24 +165,29 @@ export default (parseConfig, httpClient = fetchJson) => {
             .then(response => convertHTTPResponseToREST(response, type, resource, params))
     }
 }
-
 function formatObject(data) {
-    if (data instanceof Date) {
+    if (isDate(data)) {
         return {
             __type: 'Date',
-            iso   : data.toISOString(),
-        }
-    } else if (typeof data === 'object' && !Array.isArray(data)) {
-        return Object.keys(data).reduce((acc, key) => {
-            return {
-                ...acc,
-                [key]: formatObject(data[key])
-            }
-        }, {})
+            iso: data
+        };
+    } else if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' && !Array.isArray(data)) {
+        return Object.keys(data).reduce(function (acc, key) {
+            return _extends({}, acc, _defineProperty({}, key, formatObject(data[key])));
+        }, {});
     }
-    return data
+    return data;
+
+}
+
+function isDate(data) {
+    try {
+        return data instanceof Date || new Date(data).toISOString() === data
+    } catch(e) {
+        return false
+    }
 }
 
 function stringify(data) {
-    return JSON.stringify(formatObject(data))
+    return JSON.stringify(formatObject(data));
 }
