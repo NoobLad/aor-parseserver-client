@@ -171,7 +171,9 @@ function formatObject(data) {
             __type: 'Date',
             iso: data
         };
-    } else if (typeof data === 'object' && !Array.isArray(data)) {
+    } else if(Array.isArray(data)) {
+        return data.map(formatObject)
+    } else if (typeof data === 'object') {
         return Object.keys(data).reduce(function (acc, key) {
             return {
                 ...acc,
@@ -197,7 +199,9 @@ function stringify(data) {
 function parseObject(obj) {
     if (obj && obj.__type === "Date") {
         return obj.iso
-    } else if (typeof data === 'object' && !Array.isArray(data)) {
+    } else if(Array.isArray(obj)) {
+        return obj.map(parseObject)
+    } else if (typeof obj === 'object') {
         return Object.keys(obj).reduce((acc, key) => {
             return {
                 ...acc,
