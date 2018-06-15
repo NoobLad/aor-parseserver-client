@@ -173,7 +173,10 @@ function formatObject(data) {
         };
     } else if (typeof data === 'object' && !Array.isArray(data)) {
         return Object.keys(data).reduce(function (acc, key) {
-            return _extends({}, acc, _defineProperty({}, key, formatObject(data[key])));
+            return {
+                ...acc,
+                [key]: formatObject(data[key]),
+            }
         }, {});
     }
     return data;
