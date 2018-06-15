@@ -167,9 +167,11 @@ export default (parseConfig, httpClient = fetchJson) => {
 }
 
 function formatObject(data) {
-    if (data instanceof Date) return {
-        __type: 'Date',
-        iso   : data.toISOString(),
+    if (data instanceof Date) {
+        return {
+            __type: 'Date',
+            iso   : data.toISOString(),
+        }
     } else if (typeof data === 'object' && !Array.isArray(data)) {
         return Object.keys(data).reduce((acc, key) => {
             return {
